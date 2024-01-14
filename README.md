@@ -20,10 +20,7 @@ https://github.com/audunegames/unity-audio-for-fmod.git
 
 Make sure you have the following dependencies installed before installing this package. The package might work with lower versions of the dependencies, but those have not been tested:
 
-* [FMOD for Unity](https://fmod.com/download#fmodforunity) >=2.00.19
-* [Odin Inspector](https://odininspector.com/download) >=3.2.1.0
-
-*Note: We are aware that not everyone who wants to use this package has access to Odin Inspector and we're working on making our editor code work with the native Unity Editor functionality.*
+* [FMOD for Unity](https://fmod.com/download#fmodforunity) >=2.02.19
 
 ## License
 
