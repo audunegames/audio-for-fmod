@@ -15,5 +15,11 @@ namespace Audune.Audio.Editor
       else
         EditorGUI.LabelField(position, label, "The [FMODMixerBus] attribute can only be used with string properties");
     }
+
+    // Return the property height
+    public override float GetPropertyHeight(SerializedProperty property, GUIContent label)
+    {
+      return EditorGUIUtility.singleLineHeight;
+    }
   }
 }

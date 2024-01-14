@@ -13,7 +13,7 @@ namespace Audune.Audio
     [SerializeField, Tooltip("The audio event to play")]
     private EventReference _event;
 
-    [SerializeField, Tooltip("The type of the audio action")]
+    [SerializeField, Tooltip("The type of the audio event")]
     private AudioEventType _type = AudioEventType.OneShot;
 
     [SerializeField, Tooltip("The mode of choosing an audio table key")]

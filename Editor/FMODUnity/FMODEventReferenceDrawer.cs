@@ -13,5 +13,11 @@ namespace Audune.Audio.Editor
     {
       FMODEditorGUI.EventReferenceDropdownField(position, label, property);
     }
+
+    // Return the property height
+    public override float GetPropertyHeight(SerializedProperty property, GUIContent label)
+    {
+      return EditorGUIUtility.singleLineHeight;
+    }
   }
 }
