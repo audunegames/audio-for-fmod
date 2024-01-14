@@ -1,16 +1,19 @@
-﻿using Sirenix.OdinInspector.Editor;
+﻿using UnityEditor;
 using UnityEngine;
 
 namespace Audune.Audio.Editor
 {
   // Class that defines a property drawer for a reference to a bank
-  public sealed class FMODBankAttributeDrawer : OdinAttributeDrawer<FMODBankAttribute, string>
+  [CustomPropertyDrawer(typeof(FMODBankAttribute))]
+  public sealed class FMODBankAttributeDrawer : PropertyDrawer
   {
-    // Draw the property layout
-    protected override void DrawPropertyLayout(GUIContent label)
+    // Draw the property
+    public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
     {
-      var selected = ValueEntry.SmartValue != null ? FMODEditorGUI.BankDropdown(label, FMODStudio.GetBank(ValueEntry.SmartValue)) : null;
-      ValueEntry.SmartValue = selected?.path ?? string.Empty;
+      if (property.propertyType == SerializedPropertyType.String)
+        FMODEditorGUI.BankDropdownField(position, label, property);
+      else
+        EditorGUI.LabelField(position, label, "The [FMODBank] attribute can only be used with string properties");
     }
   }
 }
