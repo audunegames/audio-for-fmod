@@ -15,7 +15,7 @@ Audune Audio for FMOD can be best installed as a git package in the Unity Editor
 * Enter the following URL in the URL field and click **Add**:
 
 ```
-https://github.com/audunegames/unity-audio-for-fmod.git
+https://github.com/audunegames/audio-for-fmod.git
 ```
 
 Make sure you have the following dependencies installed before installing this package. The package might work with lower versions of the dependencies, but those have not been tested:
