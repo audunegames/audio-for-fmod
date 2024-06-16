@@ -11,7 +11,7 @@ namespace Audune.Audio.Editor
     // Draw the property
     public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
     {
-      FMODEditorGUI.EventReferenceDropdownField(position, label, property);
+      FMODEditorGUI.EventReferenceDropdown(position, label, property);
     }
 
     // Return the property height

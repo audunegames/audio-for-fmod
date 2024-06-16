@@ -11,7 +11,7 @@ namespace Audune.Audio.Editor
     public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
     {
       if (property.propertyType == SerializedPropertyType.String)
-        FMODEditorGUI.MixerVCADropdownField(position, label, property);
+        FMODEditorGUI.MixerVCADropdown(position, label, property);
       else
         EditorGUI.LabelField(position, label, "The [FMODMixerVCA] attribute can only be used with string properties");
     }

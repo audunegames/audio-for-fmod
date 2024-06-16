@@ -23,7 +23,7 @@ namespace Audune.Audio.Editor
 
       position.Set(position.x, position.y, position.width, EditorGUIUtility.singleLineHeight);
       var fieldPosition = new Rect(position.x, position.y, position.width - 18, position.height);
-      FMODEditorGUI.EventReferenceDropdownField(fieldPosition, label, eventProperty);
+      FMODEditorGUI.EventReferenceDropdown(fieldPosition, label, eventProperty);
       var foldoutPosition = new Rect(position.x + position.width - 16, position.y, 16, position.height);
       property.isExpanded = EditorGUI.Foldout(foldoutPosition, property.isExpanded, GUIContent.none, true);
 

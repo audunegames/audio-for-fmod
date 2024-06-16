@@ -8,15 +8,9 @@ namespace Audune.Audio.Editor
   // Class that defines GUI methods for FMOD in the Unity editor
   public static class FMODEditorGUI
   {
-    // Create a search window context for a rect
-    private static SearchWindowContext CreateSearchWindowContext(Rect position)
-    {
-      return new SearchWindowContext(GUIUtility.GUIToScreenPoint(position.max + new Vector2(position.width * -0.5f, position.height - EditorGUIUtility.standardVerticalSpacing - 1)), position.width);
-    }
-
-
+    #region Drawing dropdowns
     // Draw a dropdown for FMOD banks at the specified position
-    public static void BankDropdownField(Rect position, GUIContent label, SerializedProperty property)
+    public static void BankDropdown(Rect position, GUIContent label, SerializedProperty property)
     {
       EditorGUI.BeginProperty(position, label, property);
 
@@ -34,7 +28,7 @@ namespace Audune.Audio.Editor
     }
 
     // Draw a dropdown for FMOD event references at the specified position
-    public static void EventReferenceDropdownField(Rect position, GUIContent label, SerializedProperty property)
+    public static void EventReferenceDropdown(Rect position, GUIContent label, SerializedProperty property)
     {
       EditorGUI.BeginProperty(position, label, property);
 
@@ -55,7 +49,7 @@ namespace Audune.Audio.Editor
     }
 
     // Draw a dropdown for FMOD mixer buses at the specified position
-    public static void MixerBusDropdownField(Rect position, GUIContent label, SerializedProperty property)
+    public static void MixerBusDropdown(Rect position, GUIContent label, SerializedProperty property)
     {
       EditorGUI.BeginProperty(position, label, property);
 
@@ -75,7 +69,7 @@ namespace Audune.Audio.Editor
     }
 
     // Draw a dropdown for FMOD mixer VCAs at the specified position
-    public static void MixerVCADropdownField(Rect position, GUIContent label, SerializedProperty property)
+    public static void MixerVCADropdown(Rect position, GUIContent label, SerializedProperty property)
     {
       EditorGUI.BeginProperty(position, label, property);
 
@@ -93,5 +87,13 @@ namespace Audune.Audio.Editor
 
       EditorGUI.EndProperty();
     }
+
+
+    // Create a search window context for a rect
+    private static SearchWindowContext CreateSearchWindowContext(Rect position)
+    {
+      return new SearchWindowContext(GUIUtility.GUIToScreenPoint(position.max + new Vector2(position.width * -0.5f, position.height - EditorGUIUtility.standardVerticalSpacing - 1)), position.width);
+    }
+    #endregion
   }
 }

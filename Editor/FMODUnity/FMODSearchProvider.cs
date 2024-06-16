@@ -86,7 +86,7 @@ namespace Audune.Audio.Editor
     }
   }
 
-  // Base class that defines a search provider for FMOD studio banks
+  // Class that defines a search provider for FMOD studio banks
   internal class FMODBankSearchProvider : FMODSearchProvider<FMODBank>
   {
     // Create a search provider

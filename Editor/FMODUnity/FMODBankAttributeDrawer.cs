@@ -11,7 +11,7 @@ namespace Audune.Audio.Editor
     public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
     {
       if (property.propertyType == SerializedPropertyType.String)
-        FMODEditorGUI.BankDropdownField(position, label, property);
+        FMODEditorGUI.BankDropdown(position, label, property);
       else
         EditorGUI.LabelField(position, label, "The [FMODBank] attribute can only be used with string properties");
     }
