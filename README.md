@@ -8,19 +8,44 @@ See the [wiki](https://github.com/audunegames/unity-audio-for-fmod/wiki) of the 
 
 ## Installation
 
-Audune Audio for FMOD can be best installed as a git package in the Unity Editor using the following steps:
+### Requirements
 
-* In the Unity editor, navigate to **Window > Package Manager**.
+This package depends on the following external dependencies. Make sure you have these installed before installing this package. The package might work with lower versions of the dependencies, but those have not been tested:
+
+* [FMOD for Unity](https://fmod.com/download#fmodforunity) >=2.02.21
+
+### Installing from the OpenUPM registry
+
+To install this package as a package from the OpenUPM registry in the Unity Editor, use the following steps:
+
+* In the Unity editor, navigate to **Edit › Project Settings... › Package Manager**.
+* Add the following Scoped Registry, or edit the existing OpenUPM entry to include the new Scope:
+
+```
+Name:     package.openupm.com
+URL:      https://package.openupm.com
+Scope(s): com.audune.audio.fmod
+```
+
+* Navigate to **Window › Package Manager**.
+* Click the **+** icon and click **Add package by name...**
+* Enter the following name in the corresponding field and click **Add**:
+
+```
+com.audune.pickle
+```
+
+### Installing as a Git package
+
+To install this package as a Git package in the Unity Editor, use the following steps:
+
+* In the Unity editor, navigate to **Window › Package Manager**.
 * Click the **+** icon and click **Add package from git URL...**
 * Enter the following URL in the URL field and click **Add**:
 
 ```
 https://github.com/audunegames/audio-for-fmod.git
 ```
-
-Make sure you have the following dependencies installed before installing this package. The package might work with lower versions of the dependencies, but those have not been tested:
-
-* [FMOD for Unity](https://fmod.com/download#fmodforunity) >=2.02.19
 
 ## License
 

@@ -5,7 +5,7 @@
   "unity": "2022.3",
   "description": "Audio system built on top of FMOD for Unity 2022 LTS or higher.",
   "documentationUrl": "https://github.com/audunegames/audio-for-fmod",
-  "changelogUrl": "https://github.com/audunegames/audio-for-fmod/commits/v0.2.0",
+  "changelogUrl": "https://github.com/audunegames/audio-for-fmod/tree/master/CHANGELOG.md",
   "licensesUrl": "https://www.gnu.org/licenses/gpl-3.0.html",
   "license": "GPL-3.0-or-later",
   "author": {
