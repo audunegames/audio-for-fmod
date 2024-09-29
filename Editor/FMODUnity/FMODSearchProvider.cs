@@ -72,7 +72,7 @@ namespace Audune.Audio.Editor
         }
 
         // Add the item to the tree
-        list.Add(new SearchTreeEntry(new GUIContent(components[^1], item.icon)) { level = components.Length, userData = item.value });
+        list.Add(new SearchTreeEntry(new GUIContent($"{components[^1]} ({string.Join("/", components[..^1])})", item.icon)) { level = components.Length, userData = item.value });
       }
 
       return list;
