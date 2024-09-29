@@ -155,7 +155,7 @@ namespace Audune.Audio
     // Apply the state vector to an event instance
     internal override void ApplyTo(FMODEventInstance instance)
     {
-      instance.spatialAttributes = _spatialAttributes;
+      instance.spatialAttributes.native = _spatialAttributes.native;
     }
   }
 }

@@ -255,11 +255,7 @@ namespace Audune.Audio
     // Return and set the spatial attributes of the instance for 3D attenuation
     public FMODSpatialAttributes spatialAttributes {
       get {
-        _nativeEventInstance.get3DAttributes(out var attributes).Check();
-        return new FMODSpatialAttributes(attributes);
-      }
-      set {
-        _nativeEventInstance.set3DAttributes(value.native).Check();
+        return new FMODSpatialAttributes(_system, this);
       }
     }
 
