@@ -20,9 +20,6 @@ namespace Audune.Audio
     internal abstract void ApplyTo(FMODEventInstance instance);
 
 
-    
-
-
     // Return the velocity of a transform
     public static Vector3 GetVelocity(Transform transform)
     {
@@ -31,45 +28,28 @@ namespace Audune.Audio
       else if (transform.TryGetComponent<Rigidbody2D>(out var rigidbody2D))
         return rigidbody2D.velocity;
       else
-        return Vector3.zero;
+        return UnityEngine.Vector3.zero;
     }
 
-    // Create a state vector backed by a vector
-    public static StateVector Of(Vector3? position = null, Vector3? velocity = null)
-    {
-      return new SimpleStateVector(position, velocity);
-    }
+    // Create a state vector backed by the specified object
+    public static StateVector Vector3(Vector3? position = null, Quaternion? rotation = null, Vector3? velocity = null)
+      => new SimpleStateVector(position, rotation, velocity);
+    public static StateVector Vector2(Vector2? position = null, Quaternion? rotation = null, Vector2? velocity = null)
+      => new SimpleStateVector(position, rotation, velocity);
+    public static StateVector Transform(Transform transform)
+      => new TransformStateVector(transform);
+    public static StateVector SpatialAttributes(FMODSpatialAttributes spatialAttributes)
+      => new SpatialAttributesStateVector(spatialAttributes);
 
-    // Create a state vector backed by a transform
-    public static StateVector Of(Transform transform)
-    {
-      return new TransformStateVector(transform);
-    }
-
-    // Create a state vector backed by FMOD spatial attributes
-    public static StateVector Of(FMODSpatialAttributes spatialAttributes)
-    {
-      return new SpatialAttributesStateVector(spatialAttributes);
-    }
-
-
-    // Convert a vector to a state vector
+    // Convert objects to state vectors
     public static implicit operator StateVector(Vector3 position)
-    {
-      return Of(position);
-    }
-
-    // Convert a transform to a state vector
+      => Vector2(position);
+    public static implicit operator StateVector(Vector2 position)
+      => Vector2(position);
     public static implicit operator StateVector(Transform transform)
-    {
-      return Of(transform);
-    }
-
-    // Convert FMOD spatial attributes to a state vector
+      => Transform(transform);
     public static implicit operator StateVector(FMODSpatialAttributes spatialAttributes)
-    {
-      return Of(spatialAttributes);
-    }
+      => SpatialAttributes(spatialAttributes);
   }
 
 
@@ -97,10 +77,11 @@ namespace Audune.Audio
 
 
     // Constructor
-    internal SimpleStateVector(Vector3? position = null, Vector3? velocity = null)
+    internal SimpleStateVector(Vector3? position = null, Quaternion? rotation = null, Vector3? velocity = null)
     {
-      _position = position ?? Vector3.zero;
-      _velocity = velocity ?? Vector3.zero;
+      _position = position ?? UnityEngine.Vector3.zero;
+      _rotation = rotation ?? Quaternion.identity;
+      _velocity = velocity ?? UnityEngine.Vector3.zero;
     }
 
     // Apply the state vector to an event instance
@@ -116,34 +97,34 @@ namespace Audune.Audio
   internal sealed class TransformStateVector : StateVector
   {
     // The transform of the state vector
-    public readonly Transform transform;
+    private readonly Transform _transform;
 
 
     // Return the position of the state vector
-    public override Vector3 position => transform.position;
+    public override Vector3 position => _transform.position;
 
     // Return the rotation of the state vector
-    public override Quaternion rotation => transform.rotation;
+    public override Quaternion rotation => _transform.rotation;
 
     // Return the velocity of the state vector
-    public override Vector3 velocity => GetVelocity(transform);
+    public override Vector3 velocity => GetVelocity(_transform);
     
 
     // Constructor
     internal TransformStateVector(Transform transform)
     {
-      this.transform = transform;
+      _transform = transform;
     }
 
     // Apply the state vector to an event instance
     internal override void ApplyTo(FMODEventInstance instance)
     {
-      if (transform.TryGetComponent<Rigidbody>(out var rigidbody))
-        RuntimeManager.AttachInstanceToGameObject(instance.native, transform, rigidbody);
-      else if (transform.TryGetComponent<Rigidbody2D>(out var rigidbody2D))
-        RuntimeManager.AttachInstanceToGameObject(instance.native, transform, rigidbody2D);
+      if (_transform.TryGetComponent<Rigidbody>(out var rigidbody))
+        RuntimeManager.AttachInstanceToGameObject(instance.native, _transform, rigidbody);
+      else if (_transform.TryGetComponent<Rigidbody2D>(out var rigidbody2D))
+        RuntimeManager.AttachInstanceToGameObject(instance.native, _transform, rigidbody2D);
       else
-        RuntimeManager.AttachInstanceToGameObject(instance.native, transform);
+        RuntimeManager.AttachInstanceToGameObject(instance.native, _transform);
     }
   }
 
@@ -152,29 +133,29 @@ namespace Audune.Audio
   internal sealed class SpatialAttributesStateVector : StateVector
   {
     // The spatial attributes of the state vector
-    public readonly FMODSpatialAttributes spatialAttributes;
+    private readonly FMODSpatialAttributes _spatialAttributes;
 
 
     // Return the position of the state vector
-    public override Vector3 position => spatialAttributes.position;
+    public override Vector3 position => _spatialAttributes.position;
 
     // Return the rotation of the state vector
-    public override Quaternion rotation => spatialAttributes.rotation;
+    public override Quaternion rotation => _spatialAttributes.rotation;
 
     // Return the velocity of the state vector
-    public override Vector3 velocity => spatialAttributes.velocity;
+    public override Vector3 velocity => _spatialAttributes.velocity;
     
 
     // Constructor
     internal SpatialAttributesStateVector(FMODSpatialAttributes spatialAttributes)
     {
-      this.spatialAttributes = spatialAttributes;
+      _spatialAttributes = spatialAttributes;
     }
 
     // Apply the state vector to an event instance
     internal override void ApplyTo(FMODEventInstance instance)
     {
-      instance.spatialAttributes = spatialAttributes;
+      instance.spatialAttributes = _spatialAttributes;
     }
   }
 }
