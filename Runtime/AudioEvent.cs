@@ -28,7 +28,7 @@ namespace Audune.Audio
 
 
     // Play the audio event
-    public void Play(Transform transform = null)
+    public void Play(StateVector vector = null)
     {
       // If the type is none or the event is null, then do nothing
       if (_event.IsNull)
@@ -36,9 +36,9 @@ namespace Audune.Audio
 
       // Check the type of the event
       if (_type == AudioEventType.OneShot)
-        _event.StartOneShotInstance(transform);
+        _event.StartOneShotInstance(vector);
       else if (_type == AudioEventType.OneShotAudioTable && TryPickTableKey(out var key))
-        _event.StartOneShotAudioTableInstance(key, transform);
+        _event.StartOneShotAudioTableInstance(key, vector);
     }
 
 

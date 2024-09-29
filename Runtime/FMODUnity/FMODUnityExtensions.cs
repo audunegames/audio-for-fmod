@@ -1,5 +1,5 @@
-﻿using FMODUnity;
-using UnityEngine;
+﻿using System;
+using FMODUnity;
 
 namespace Audune.Audio
 {
@@ -7,119 +7,101 @@ namespace Audune.Audio
   public static class FMODUnityExtensions
   {
     #region Creating event instances
-    // Create an event instance from the reference
-    public static FMODEventInstance CreateInstance(this EventReference reference)
+    // Create an event instance from the description with the specified spatial state
+    public static FMODEventInstance CreateInstance(this FMODEventDescription description, StateVector vector = null)
     {
-      return FMODStudio.GetEvent(reference).CreateInstance();
-    }
+      if (description == null)
+        throw new ArgumentNullException(nameof(description));
 
-
-    // Create an event instance from the description with an attached transform
-    public static FMODEventInstance CreateInstance(this FMODEventDescription description, Transform transform)
-    {
       var instance = description.CreateInstance();
-
-      if (transform != null)
-      {
-        if (transform.TryGetComponent<Rigidbody>(out var rigidbody))
-          RuntimeManager.AttachInstanceToGameObject(instance.native, transform, rigidbody);
-        else if (transform.TryGetComponent<Rigidbody2D>(out var rigidbody2D))
-          RuntimeManager.AttachInstanceToGameObject(instance.native, transform, rigidbody2D);
-        else
-          RuntimeManager.AttachInstanceToGameObject(instance.native, transform);
-      }
-
+      vector?.ApplyTo(instance);
       return instance;
     }
 
-    // Create an event instance from the reference with an attached transform
-    public static FMODEventInstance CreateInstance(this EventReference reference, Transform transform)
+    // Create an audio table event instance from the description with the specified spatial state
+    public static FMODEventInstance CreateAudioTableInstance(this FMODEventDescription description, string key, StateVector vector = null)
     {
-      return FMODStudio.GetEvent(reference).CreateInstance(transform);
-    }
+      if (description == null)
+        throw new ArgumentNullException(nameof(description));
 
-    // Create an audio table event instance from the description with an attached transform
-    public static FMODEventInstance CreateAudioTableInstance(this FMODEventDescription description, string key, Transform transform)
-    {
       var instance = description.CreateAudioTableInstance(key);
-
-      if (transform != null)
-      {
-        if (transform.TryGetComponent<Rigidbody>(out var rigidbody))
-          RuntimeManager.AttachInstanceToGameObject(instance.native, transform, rigidbody);
-        else if (transform.TryGetComponent<Rigidbody2D>(out var rigidbody2D))
-          RuntimeManager.AttachInstanceToGameObject(instance.native, transform, rigidbody2D);
-        else
-          RuntimeManager.AttachInstanceToGameObject(instance.native, transform);
-      }
-
+      vector?.ApplyTo(instance);
       return instance;
     }
 
-    // Create an audio table event instance from the reference with an attached transform
-    public static FMODEventInstance CreateAudioTableInstance(this EventReference reference, string key, Transform transform)
+
+    // Create an event instance from the reference with the specified spatial state
+    public static FMODEventInstance CreateInstance(this EventReference reference, StateVector vector = null)
     {
-      return FMODStudio.GetEvent(reference).CreateAudioTableInstance(key, transform);
+      return FMODStudio.GetEvent(reference).CreateInstance(vector);
+    }
+
+    // Create an audio table event instance from the reference  with the specified spatial state
+    public static FMODEventInstance CreateAudioTableInstance(this EventReference reference, string key, StateVector vector = null)
+    {
+      return FMODStudio.GetEvent(reference).CreateAudioTableInstance(key, vector);
     }
     #endregion
 
     #region Starting event instances
     // Create an event instance from the description and start it
-    public static FMODEventInstance StartInstance(this FMODEventDescription description, Transform transform = null)
+    public static FMODEventInstance StartInstance(this FMODEventDescription description, StateVector vector = null)
     {
-      var instance = description.CreateInstance(transform);
+      var instance = description.CreateInstance(vector);
       instance.Start();
       return instance;
     }
+
+    // Create an audio table event instance from the description and start it
+    public static FMODEventInstance StartAudioTableInstance(this FMODEventDescription description, string key, StateVector vector = null)
+    {
+      var instance = description.CreateAudioTableInstance(key, vector);
+      instance.Start();
+      return instance;
+    }
+
 
     // Create an event instance from the description and start it
-    public static FMODEventInstance StartInstance(this EventReference reference, Transform transform = null)
+    public static FMODEventInstance StartInstance(this EventReference reference, StateVector vector = null)
     {
-      return FMODStudio.GetEvent(reference).StartInstance(transform);
+      return FMODStudio.GetEvent(reference).StartInstance(vector);
     }
 
     // Create an audio table event instance from the description and start it
-    public static FMODEventInstance StartAudioTableInstance(this FMODEventDescription description, string key, Transform transform = null)
+    public static FMODEventInstance StartAudioTableInstance(this EventReference reference, string key, StateVector vector = null)
     {
-      var instance = description.CreateAudioTableInstance(key, transform);
-      instance.Start();
-      return instance;
-    }
-
-    // Create an audio table event instance from the description and start it
-    public static FMODEventInstance StartAudioTableInstance(this EventReference reference, string key, Transform transform = null)
-    {
-      return FMODStudio.GetEvent(reference).StartAudioTableInstance(key, transform);
+      return FMODStudio.GetEvent(reference).StartAudioTableInstance(key, vector);
     }
     #endregion
 
     #region Starting one shot event instances
     // Create an event instance from the description, start it, and release it immediately
-    public static void StartOneShotInstance(this FMODEventDescription description, Transform transform = null)
+    public static void StartOneShotInstance(this FMODEventDescription description, StateVector vector = null)
     {
-      var instance = description.CreateInstance(transform);
+      var instance = description.CreateInstance(vector);
       instance.Start();
       instance.Dispose();
     }
+
+    // Create an audio table event instance from the description with an attached transform, start it, and release it immediately
+    public static void StartOneShotAudioTableInstance(this FMODEventDescription description, string key, StateVector vector = null)
+    {
+      var instance = description.CreateAudioTableInstance(key, vector);
+      instance.Start();
+      instance.Dispose();
+    }
+
 
     // Create an event instance from the description, start it, and release it immediately
-    public static void StartOneShotInstance(this EventReference reference, Transform transform = null)
+    public static void StartOneShotInstance(this EventReference reference, StateVector vector = null)
     {
-      FMODStudio.GetEvent(reference).StartOneShotInstance(transform);
+      FMODStudio.GetEvent(reference).StartOneShotInstance(vector);
     }
 
-    // Create an audio table event instance from the description, start it, and release it immediately
-    public static void StartOneShotAudioTableInstance(this FMODEventDescription description, string key, Transform transform = null)
+    // Create an audio table event instance from the description with an attached transform, start it, and release it immediately
+    public static void StartOneShotAudioTableInstance(this EventReference reference, string key, StateVector vector = null)
     {
-      var instance = description.CreateAudioTableInstance(key, transform);
-      instance.Start();
-      instance.Dispose();
-    }
-
-    // Create an audio table event instance from the description, start it, and release it immediately
-    public static void StartOneShotAudioTableInstance(this EventReference reference, string key, Transform transform = null)
-    {
-      FMODStudio.GetEvent(reference).StartOneShotAudioTableInstance(key, transform);
+      FMODStudio.GetEvent(reference).StartOneShotAudioTableInstance(key, vector);
     }
     #endregion
 
