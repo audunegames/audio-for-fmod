@@ -7,13 +7,13 @@ namespace Audune.Audio
   // Listed at https://fmod.com/docs/2.02/api/studio-api-vca.html
   public class FMODMixerVCA : FMODStudioSystemComponent, IEquatable<FMODMixerVCA>
   {
-    // Dictionary of all VCAs
-    private static readonly Dictionary<IntPtr, FMODMixerVCA> _instances = new Dictionary<IntPtr, FMODMixerVCA>();
-
-
     // The native handle of the VCA
     private readonly FMOD.Studio.VCA _nativeVCA;
 
+
+    #region Constructors
+    // Dictionary of all VCAs
+    private static readonly Dictionary<IntPtr, FMODMixerVCA> _instances = new Dictionary<IntPtr, FMODMixerVCA>();
 
     // Create a new wrapper or get a cached one
     internal static FMODMixerVCA Of(FMODStudioSystem system, FMOD.Studio.VCA nativeVCA)
@@ -37,27 +37,9 @@ namespace Audune.Audio
 
       _nativeVCA = nativeVCA;
     }
+    #endregion
 
-
-    // Return if the VCA equals another object
-    public override bool Equals(object obj)
-    {
-      return Equals(obj as FMODMixerVCA);
-    }
-
-    // Return if the VCA equals another VCA
-    public bool Equals(FMODMixerVCA other)
-    {
-      return other is not null && _nativeVCA.handle.Equals(other._nativeVCA.handle);
-    }
-
-    // Return the hash code of the VCA
-    public override int GetHashCode()
-    {
-      return HashCode.Combine(_nativeVCA.handle);
-    }
-
-
+    #region Properties
     // Return the native handle of the VCA
     internal FMOD.Studio.VCA native => _nativeVCA;
 
@@ -96,5 +78,26 @@ namespace Audune.Audio
         return finalVolume;
       }
     }
+    #endregion
+
+    #region Equatable implementation
+    // Return if the VCA equals another object
+    public override bool Equals(object obj)
+    {
+      return Equals(obj as FMODMixerVCA);
+    }
+
+    // Return if the VCA equals another VCA
+    public bool Equals(FMODMixerVCA other)
+    {
+      return other is not null && _nativeVCA.handle.Equals(other._nativeVCA.handle);
+    }
+
+    // Return the hash code of the VCA
+    public override int GetHashCode()
+    {
+      return HashCode.Combine(_nativeVCA.handle);
+    }
+    #endregion
   }
 }

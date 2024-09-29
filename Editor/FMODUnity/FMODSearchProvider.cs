@@ -108,7 +108,7 @@ namespace Audune.Audio.Editor
     {
       var provider = CreateInstance<FMODEventReferenceSearchProvider>();
       provider.title = "Events";
-      provider.items = banks.SelectMany(bank => bank.events.Select(description => new Item(description.GetEventReference(), $"{bank.GetDisplayName()}/{description.GetDisplayName()}", FMODEditorGUIUtils.eventIcon))).ToList();
+      provider.items = banks.SelectMany(bank => bank.events.Select(description => new Item((EventReference)description, $"{bank.GetDisplayName()}/{description.GetDisplayName()}", FMODEditorGUIUtils.eventIcon))).ToList();
       provider.onSelectCallback = onSelectCallback;
       return provider;
     }

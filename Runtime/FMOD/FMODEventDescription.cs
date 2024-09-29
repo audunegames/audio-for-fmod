@@ -8,12 +8,13 @@ namespace Audune.Audio
   // Listed at https://fmod.com/docs/2.02/api/studio-api-eventdescription.html
   public sealed class FMODEventDescription : FMODStudioSystemComponent, IEquatable<FMODEventDescription>
   {
-    // Dictionary of all descriptions
-    private static readonly Dictionary<IntPtr, FMODEventDescription> _instances = new Dictionary<IntPtr, FMODEventDescription>();
-
-
     // The native handle of the description
     private readonly FMOD.Studio.EventDescription _nativeEventDescription;
+
+
+    #region Constructors
+    // Dictionary of all descriptions
+    private static readonly Dictionary<IntPtr, FMODEventDescription> _instances = new Dictionary<IntPtr, FMODEventDescription>();
 
 
     // Create a new wrapper or get a cached one
@@ -38,29 +39,11 @@ namespace Audune.Audio
 
       _nativeEventDescription = nativeEventDescription;
     }
+    #endregion
 
-
-    // Return if the description equals another object
-    public override bool Equals(object obj)
-    {
-      return Equals(obj as FMODEventDescription);
-    }
-
-    // Return if the description equals another description
-    public bool Equals(FMODEventDescription other)
-    {
-      return other is not null && _nativeEventDescription.handle.Equals(other._nativeEventDescription.handle);
-    }
-
-    // Return the hash code of the description
-    public override int GetHashCode()
-    {
-      return HashCode.Combine(_nativeEventDescription.handle);
-    }
-
-
+    #region Properties
     // Return the native handle of the description
-    internal FMOD.Studio.EventDescription Native => _nativeEventDescription;
+    internal FMOD.Studio.EventDescription native => _nativeEventDescription;
 
 
     // Return the unique identifier of the description
@@ -174,8 +157,9 @@ namespace Audune.Audio
         return length;
       }
     }
+    #endregion
 
-
+    #region Methods
     // Create an event instance from the description
     public FMODEventInstance CreateInstance()
     {
@@ -188,8 +172,8 @@ namespace Audune.Audio
     {
       var instance = CreateInstance();
 
-      instance.OnProgrammerSoundCreated += (ref FMOD.Studio.PROGRAMMER_SOUND_PROPERTIES programmerSound) => instance.AudioTableInstanceCreatedCallback(ref programmerSound, key);
-      instance.OnProgrammerSoundDestroyed += (ref FMOD.Studio.PROGRAMMER_SOUND_PROPERTIES programmerSound) => instance.AudioTableInstanceDestroyedCallback(ref programmerSound);
+      instance.onProgrammerSoundCreated += (ref FMOD.Studio.PROGRAMMER_SOUND_PROPERTIES programmerSound) => instance.AudioTableInstanceCreatedCallback(ref programmerSound, key);
+      instance.onProgrammerSoundDestroyed += (ref FMOD.Studio.PROGRAMMER_SOUND_PROPERTIES programmerSound) => instance.AudioTableInstanceDestroyedCallback(ref programmerSound);
 
       return instance;
     }
@@ -253,5 +237,38 @@ namespace Audune.Audio
       _nativeEventDescription.getParameterLabelByIndex(index, labelIndex, out var label).Check();
       return label;
     }
+    #endregion
+
+    #region Equatable implementation
+    // Return if the description equals another object
+    public override bool Equals(object obj)
+    {
+      return Equals(obj as FMODEventDescription);
+    }
+
+    // Return if the description equals another description
+    public bool Equals(FMODEventDescription other)
+    {
+      return other is not null && _nativeEventDescription.handle.Equals(other._nativeEventDescription.handle);
+    }
+
+    // Return the hash code of the description
+    public override int GetHashCode()
+    {
+      return HashCode.Combine(_nativeEventDescription.handle);
+    }
+    #endregion
+
+    #region Implicit operators
+    // Convert an event description to an event reference
+    public static implicit operator FMODUnity.EventReference(FMODEventDescription description)
+    {
+#if UNITY_EDITOR
+      return new FMODUnity.EventReference { Guid = description.guid, Path = description.path };
+#else
+      return new FMODUnity.EventReference { Guid = description.guid };
+#endif
+    }
+    #endregion
   }
 }

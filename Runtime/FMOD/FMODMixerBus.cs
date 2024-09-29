@@ -7,12 +7,13 @@ namespace Audune.Audio
   // Listed at https://fmod.com/docs/2.02/api/studio-api-bus.html
   public sealed class FMODMixerBus : FMODStudioSystemComponent, IEquatable<FMODMixerBus>
   {
-    // Dictionary of all VCAs
-    private static readonly Dictionary<IntPtr, FMODMixerBus> _instances = new Dictionary<IntPtr, FMODMixerBus>();
-
-
     // The native handle of the bus
     private readonly FMOD.Studio.Bus _nativeBus;
+
+
+    #region Constructors
+    // Dictionary of all VCAs
+    private static readonly Dictionary<IntPtr, FMODMixerBus> _instances = new Dictionary<IntPtr, FMODMixerBus>();
 
 
     // Create a new wrapper or get a cached one
@@ -37,27 +38,9 @@ namespace Audune.Audio
 
       _nativeBus = nativeBus;
     }
+    #endregion
 
-
-    // Return if the bus equals another object
-    public override bool Equals(object obj)
-    {
-      return Equals(obj as FMODMixerBus);
-    }
-
-    // Return if the bus equals another event instance
-    public bool Equals(FMODMixerBus other)
-    {
-      return other is not null && _nativeBus.handle.Equals(other._nativeBus.handle);
-    }
-
-    // Return the hash code of the event instance
-    public override int GetHashCode()
-    {
-      return HashCode.Combine(_nativeBus.handle);
-    }
-
-
+    #region Properties
     // Return the native handle of the bus
     internal FMOD.Studio.Bus native => _nativeBus;
 
@@ -137,8 +120,9 @@ namespace Audune.Audio
         _nativeBus.setPortIndex(value).Check();
       }
     }
+    #endregion
 
-
+    #region Methods
     // Stop all event instances that are routed into the bus
     public void StopAllEventInstances(bool allowFadeout = true)
     {
@@ -156,5 +140,26 @@ namespace Audune.Audio
     {
       _nativeBus.unlockChannelGroup().Check();
     }
+    #endregion
+
+    #region Equatable implementation
+    // Return if the bus equals another object
+    public override bool Equals(object obj)
+    {
+      return Equals(obj as FMODMixerBus);
+    }
+
+    // Return if the bus equals another event instance
+    public bool Equals(FMODMixerBus other)
+    {
+      return other is not null && _nativeBus.handle.Equals(other._nativeBus.handle);
+    }
+
+    // Return the hash code of the event instance
+    public override int GetHashCode()
+    {
+      return HashCode.Combine(_nativeBus.handle);
+    }
+    #endregion
   }
 }

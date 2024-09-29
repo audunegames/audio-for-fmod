@@ -7,10 +7,12 @@
     protected readonly FMODStudioSystem _system;
 
 
+    #region Constructors
     // Constructor
     public FMODStudioSystemComponent(FMODStudioSystem system)
     {
       _system = system;
     }
+    #endregion
   }
 }

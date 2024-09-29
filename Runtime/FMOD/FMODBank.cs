@@ -8,12 +8,13 @@ namespace Audune.Audio
   // Listed at https://fmod.com/docs/2.02/api/studio-api-bank.html
   public sealed class FMODBank : FMODStudioSystemComponent, IEquatable<FMODBank>
   {
-    // Dictionary of all banks
-    private static readonly Dictionary<IntPtr, FMODBank> _instances = new Dictionary<IntPtr, FMODBank>();
-
-
     // The native handle of the description
     private readonly FMOD.Studio.Bank _nativeBank;
+
+
+    #region Constructors
+    // Dictionary of all banks
+    private static readonly Dictionary<IntPtr, FMODBank> _instances = new Dictionary<IntPtr, FMODBank>();
 
 
     // Create a new wrapper or get a cached one
@@ -38,29 +39,11 @@ namespace Audune.Audio
 
       _nativeBank = nativeBank;
     }
+    #endregion
 
-
-    // Return if the bank equals another object
-    public override bool Equals(object obj)
-    {
-      return Equals(obj as FMODBank);
-    }
-
-    // Return if the bank equals another bank
-    public bool Equals(FMODBank other)
-    {
-      return other is not null && _nativeBank.handle.Equals(other._nativeBank.handle);
-    }
-
-    // Return the hash code of the bank
-    public override int GetHashCode()
-    {
-      return HashCode.Combine(_nativeBank.handle);
-    }
-
-
+    #region Properties
     // Return the native handle of the bank
-    internal FMOD.Studio.Bank Native => _nativeBank;
+    internal FMOD.Studio.Bank native => _nativeBank;
 
 
     // Return the unique identifier of the bank
@@ -134,8 +117,9 @@ namespace Audune.Audio
         return dictionary;
       }
     }
+    #endregion
 
-
+    #region Methods
     // Load the sample data of the bank
     public void LoadSampleData()
     {
@@ -153,5 +137,26 @@ namespace Audune.Audio
     {
       _nativeBank.unload().Check();
     }
+    #endregion
+
+    #region Equatable implementation
+    // Return if the bank equals another object
+    public override bool Equals(object obj)
+    {
+      return Equals(obj as FMODBank);
+    }
+
+    // Return if the bank equals another bank
+    public bool Equals(FMODBank other)
+    {
+      return other is not null && _nativeBank.handle.Equals(other._nativeBank.handle);
+    }
+
+    // Return the hash code of the bank
+    public override int GetHashCode()
+    {
+      return HashCode.Combine(_nativeBank.handle);
+    }
+    #endregion
   }
 }

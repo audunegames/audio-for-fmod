@@ -9,14 +9,15 @@ namespace Audune.Audio
     // The native handle of the 3D attributes
     private FMOD.ATTRIBUTES_3D _native3DAttributes;
 
-
+    #region Constructors
     // Constructor from native 3D attributes
     public FMODSpatialAttributes(FMOD.ATTRIBUTES_3D native3DAttributes)
     {
-      this._native3DAttributes = native3DAttributes;
+      _native3DAttributes = native3DAttributes;
     }
+    #endregion
 
-
+    #region Properties
     // Return the native handle of the 3D attributes
     internal FMOD.ATTRIBUTES_3D native => _native3DAttributes;
 
@@ -84,5 +85,6 @@ namespace Audune.Audio
         };
       }
     }
+    #endregion
   }
 }

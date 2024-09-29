@@ -57,25 +57,7 @@ namespace Audune.Audio
     }
 
 
-    // Return if the system equals another object
-    public override bool Equals(object obj)
-    {
-      return Equals(obj as FMODStudioSystem);
-    }
-
-    // Return if the system equals another system
-    public bool Equals(FMODStudioSystem other)
-    {
-      return other is not null && _nativeSystem.handle.Equals(other._nativeSystem.handle);
-    }
-
-    // Return the hash code of the system
-    public override int GetHashCode()
-    {
-      return HashCode.Combine(_nativeSystem.handle);
-    }
-
-
+    #region Properties
     // Return the native handle of the parameter description
     internal FMOD.Studio.System native => _nativeSystem;
 
@@ -87,8 +69,9 @@ namespace Audune.Audio
         return array.Select(bank => FMODBank.Of(this, bank));
       }
     }
+    #endregion
 
-
+    #region Methods
     // Return a bank of the system by its path
     public FMODBank GetBank(string path)
     {
@@ -239,8 +222,9 @@ namespace Audune.Audio
       // Return the sound
       return nativeSound;
     }
+    #endregion
 
-
+    #region Callbacks
     // Callback handler for the system
     [AOT.MonoPInvokeCallback(typeof(FMOD.Studio.SYSTEM_CALLBACK))]
     private static FMOD.RESULT CallbackHandler(IntPtr systemPtr, FMOD.Studio.SYSTEM_CALLBACK_TYPE type, IntPtr commandDataPtr, IntPtr userDataPtr)
@@ -275,5 +259,26 @@ namespace Audune.Audio
         return ex.Result;
       }
     }
+    #endregion
+    
+    #region Equatable implementation
+    // Return if the system equals another object
+    public override bool Equals(object obj)
+    {
+      return Equals(obj as FMODStudioSystem);
+    }
+
+    // Return if the system equals another system
+    public bool Equals(FMODStudioSystem other)
+    {
+      return other is not null && _nativeSystem.handle.Equals(other._nativeSystem.handle);
+    }
+
+    // Return the hash code of the system
+    public override int GetHashCode()
+    {
+      return HashCode.Combine(_nativeSystem.handle);
+    }
+    #endregion
   }
 }

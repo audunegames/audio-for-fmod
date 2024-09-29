@@ -1,8 +1,9 @@
 ﻿namespace Audune.Audio
 {
-  // Class that defines utility methods for FMOD
-  public static class FMODUtils
+  // Class that defines extension methods for FMOD
+  public static class FMODExtensions
   {
+    #region Getting display names
     // Prefixes for paths of FMOD components
     public static readonly string BankPrefix = "bank:/";
     public static readonly string EventDescriptionPrefix = "event:/";
@@ -37,5 +38,6 @@
       var name = vca.path;
       return name.StartsWith(MixerVCAPrefix) ? name.Substring(MixerVCAPrefix.Length) : name;
     }
+    #endregion
   }
 }

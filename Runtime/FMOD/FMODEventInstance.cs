@@ -7,10 +7,6 @@ namespace Audune.Audio
   // Listed at https://fmod.com/docs/2.02/api/studio-api-eventdescription.html
   public sealed class FMODEventInstance : FMODStudioSystemComponent, IDisposable, IEquatable<FMODEventInstance>
   {
-    // Dictionary of all instances
-    private static readonly Dictionary<IntPtr, FMODEventInstance> _instances = new Dictionary<IntPtr, FMODEventInstance>();
-
-
     // The native handle of the instance
     private readonly FMOD.Studio.EventInstance _nativeEventInstance;
 
@@ -19,61 +15,66 @@ namespace Audune.Audio
 
 
     // Event handler when an instance has been created
-    public event FMODCallback OnCreated;
+    public event FMODCallback onCreated;
 
     // Event handler when an instance is about to be destroyed
-    public event FMODCallback OnDestroyed;
+    public event FMODCallback onDestroyed;
 
     // Event handler when start has been called on an instance which was not already playing
-    public event FMODCallback OnStarting;
+    public event FMODCallback onStarting;
 
     // Event handler when an instance has started
-    public event FMODCallback OnStarted;
+    public event FMODCallback onStarted;
 
     // Event handler when start has been called on an instance which was already playing
-    public event FMODCallback OnRestarted;
+    public event FMODCallback onRestarted;
 
     // Event handler when an instance has stopped
-    public event FMODCallback OnStopped;
+    public event FMODCallback onStopped;
 
     // Event handler when start has been called but the polyphony settings did not allow the event to start
-    public event FMODCallback OnStartFailed;
+    public event FMODCallback onStartFailed;
 
     // Event handler when an programmer sound is about to play
-    public event FMODReferenceCallback<FMOD.Studio.PROGRAMMER_SOUND_PROPERTIES> OnProgrammerSoundCreated;
+    public event FMODReferenceCallback<FMOD.Studio.PROGRAMMER_SOUND_PROPERTIES> onProgrammerSoundCreated;
 
     // Event handler when a programmer sound and has stopped playing
-    public event FMODReferenceCallback<FMOD.Studio.PROGRAMMER_SOUND_PROPERTIES> OnProgrammerSoundDestroyed;
+    public event FMODReferenceCallback<FMOD.Studio.PROGRAMMER_SOUND_PROPERTIES> onProgrammerSoundDestroyed;
 
     // Event handler when a DSP plugin instance has been created
-    public event FMODReferenceCallback<FMOD.Studio.PLUGIN_INSTANCE_PROPERTIES> OnPluginCreated;
+    public event FMODReferenceCallback<FMOD.Studio.PLUGIN_INSTANCE_PROPERTIES> onPluginCreated;
 
     // Event handler when a DSP plugin instance is about to be destroyed
-    public event FMODReferenceCallback<FMOD.Studio.PLUGIN_INSTANCE_PROPERTIES> OnPluginDestroyed;
+    public event FMODReferenceCallback<FMOD.Studio.PLUGIN_INSTANCE_PROPERTIES> onPluginDestroyed;
 
     // Event handler when the timeline passes a named marker
-    public event FMODReferenceCallback<FMOD.Studio.TIMELINE_MARKER_PROPERTIES> OnTimelineMarker;
+    public event FMODReferenceCallback<FMOD.Studio.TIMELINE_MARKER_PROPERTIES> onTimelineMarker;
 
     // Event handler when the timeline hits a beat in a tempo section
-    public event FMODReferenceCallback<FMOD.Studio.TIMELINE_BEAT_PROPERTIES> OnTimelineBeat;
+    public event FMODReferenceCallback<FMOD.Studio.TIMELINE_BEAT_PROPERTIES> onTimelineBeat;
 
     // Event handler when the instance plays a sound
-    public event FMODReferenceCallback<FMOD.Sound> OnSoundPlayed;
+    public event FMODReferenceCallback<FMOD.Sound> onSoundPlayed;
 
     // Event handler when the instance finishes playing a sound
-    public event FMODReferenceCallback<FMOD.Sound> OnSoundStopped;
+    public event FMODReferenceCallback<FMOD.Sound> onSoundStopped;
 
     // Event handler when an instance becomes virtual
-    public event FMODCallback OnBecameVirtual;
+    public event FMODCallback onBecameVirtual;
 
     // Event handler when an instance becomes real
-    public event FMODCallback OnBecameReal;
+    public event FMODCallback onBecameReal;
 
     // Event handler when an instance is started by a start event command
-    public event FMODCallback<FMODEventInstance> OnEventCommandStarted;
+    public event FMODCallback<FMODEventInstance> onEventCommandStarted;
 
     // Event handler when the timeline hits a beat in a tempo section of a nested event
-    public event FMODReferenceCallback<FMOD.Studio.TIMELINE_NESTED_BEAT_PROPERTIES> OnNestedTimelineBeat;
+    public event FMODReferenceCallback<FMOD.Studio.TIMELINE_NESTED_BEAT_PROPERTIES> onNestedTimelineBeat;
+
+
+    #region Constructors
+    // Dictionary of all instances
+    private static readonly Dictionary<IntPtr, FMODEventInstance> _instances = new Dictionary<IntPtr, FMODEventInstance>();
 
 
     // Create a new wrapper or get a cached one
@@ -105,27 +106,9 @@ namespace Audune.Audio
     {
       _nativeEventInstance.release().Check();
     }
+    #endregion
 
-
-    // Return if the instance equals another object
-    public override bool Equals(object obj)
-    {
-      return Equals(obj as FMODEventInstance);
-    }
-
-    // Return if the instance equals another instance
-    public bool Equals(FMODEventInstance other)
-    {
-      return other is not null && _nativeEventInstance.handle.Equals(other._nativeEventInstance.handle);
-    }
-
-    // Return the hash code of the instance
-    public override int GetHashCode()
-    {
-      return HashCode.Combine(_nativeEventInstance.handle);
-    }
-
-
+    #region Properties
     // Return the native handle of the instance
     internal FMOD.Studio.EventInstance native => _nativeEventInstance;
 
@@ -328,8 +311,9 @@ namespace Audune.Audio
         _nativeEventInstance.setListenerMask(value).Check();
       }
     }
+    #endregion
 
-
+    #region Methods
     // Start playback of the instance
     public void Start()
     {
@@ -408,8 +392,9 @@ namespace Audune.Audio
     {
       _nativeEventInstance.setReverbLevel(index, level).Check();
     }
+    #endregion
 
-
+    #region Callbacks
     // Event handler for when an audio table instance has been created
     internal void AudioTableInstanceCreatedCallback(ref FMOD.Studio.PROGRAMMER_SOUND_PROPERTIES programmerSound, string key)
     {
@@ -441,80 +426,80 @@ namespace Audune.Audio
         switch (type)
         {
           case FMOD.Studio.EVENT_CALLBACK_TYPE.CREATED:
-            instance.OnCreated?.Invoke();
+            instance.onCreated?.Invoke();
             return FMOD.RESULT.OK;
 
           case FMOD.Studio.EVENT_CALLBACK_TYPE.DESTROYED:
-            instance.OnDestroyed?.Invoke();
+            instance.onDestroyed?.Invoke();
             return FMOD.RESULT.OK;
 
           case FMOD.Studio.EVENT_CALLBACK_TYPE.STARTING:
-            instance.OnStarting?.Invoke();
+            instance.onStarting?.Invoke();
             return FMOD.RESULT.OK;
 
           case FMOD.Studio.EVENT_CALLBACK_TYPE.STARTED:
-            instance.OnStarted?.Invoke();
+            instance.onStarted?.Invoke();
             return FMOD.RESULT.OK;
 
           case FMOD.Studio.EVENT_CALLBACK_TYPE.RESTARTED:
-            instance.OnRestarted?.Invoke();
+            instance.onRestarted?.Invoke();
             return FMOD.RESULT.OK;
 
           case FMOD.Studio.EVENT_CALLBACK_TYPE.STOPPED:
-            instance.OnStopped?.Invoke();
+            instance.onStopped?.Invoke();
             return FMOD.RESULT.OK;
 
           case FMOD.Studio.EVENT_CALLBACK_TYPE.START_FAILED:
-            instance.OnStartFailed?.Invoke();
+            instance.onStartFailed?.Invoke();
             return FMOD.RESULT.OK;
 
           case FMOD.Studio.EVENT_CALLBACK_TYPE.CREATE_PROGRAMMER_SOUND:
-            instance.OnProgrammerSoundCreated?.WithParameter(parameterPtr).Invoke();
+            instance.onProgrammerSoundCreated?.WithParameter(parameterPtr).Invoke();
             return FMOD.RESULT.OK;
 
           case FMOD.Studio.EVENT_CALLBACK_TYPE.DESTROY_PROGRAMMER_SOUND:
-            instance.OnProgrammerSoundDestroyed?.WithParameter(parameterPtr).Invoke();
+            instance.onProgrammerSoundDestroyed?.WithParameter(parameterPtr).Invoke();
             return FMOD.RESULT.OK;
 
           case FMOD.Studio.EVENT_CALLBACK_TYPE.PLUGIN_CREATED:
-            instance.OnPluginCreated?.WithParameter(parameterPtr).Invoke();
+            instance.onPluginCreated?.WithParameter(parameterPtr).Invoke();
             return FMOD.RESULT.OK;
 
           case FMOD.Studio.EVENT_CALLBACK_TYPE.PLUGIN_DESTROYED:
-            instance.OnPluginDestroyed?.WithParameter(parameterPtr).Invoke();
+            instance.onPluginDestroyed?.WithParameter(parameterPtr).Invoke();
             return FMOD.RESULT.OK;
 
           case FMOD.Studio.EVENT_CALLBACK_TYPE.TIMELINE_MARKER:
-            instance.OnTimelineMarker?.WithParameter(parameterPtr).Invoke();
+            instance.onTimelineMarker?.WithParameter(parameterPtr).Invoke();
             return FMOD.RESULT.OK;
 
           case FMOD.Studio.EVENT_CALLBACK_TYPE.TIMELINE_BEAT:
-            instance.OnTimelineBeat?.WithParameter(parameterPtr).Invoke();
+            instance.onTimelineBeat?.WithParameter(parameterPtr).Invoke();
             return FMOD.RESULT.OK;
 
           case FMOD.Studio.EVENT_CALLBACK_TYPE.SOUND_PLAYED:
-            instance.OnSoundPlayed?.WithParameter(parameterPtr).Invoke();
+            instance.onSoundPlayed?.WithParameter(parameterPtr).Invoke();
             return FMOD.RESULT.OK;
 
           case FMOD.Studio.EVENT_CALLBACK_TYPE.SOUND_STOPPED:
-            instance.OnSoundStopped?.WithParameter(parameterPtr).Invoke();
+            instance.onSoundStopped?.WithParameter(parameterPtr).Invoke();
             return FMOD.RESULT.OK;
 
           case FMOD.Studio.EVENT_CALLBACK_TYPE.REAL_TO_VIRTUAL:
-            instance.OnBecameVirtual?.Invoke();
+            instance.onBecameVirtual?.Invoke();
             return FMOD.RESULT.OK;
 
           case FMOD.Studio.EVENT_CALLBACK_TYPE.VIRTUAL_TO_REAL:
-            instance.OnBecameReal?.Invoke();
+            instance.onBecameReal?.Invoke();
             return FMOD.RESULT.OK;
 
           case FMOD.Studio.EVENT_CALLBACK_TYPE.START_EVENT_COMMAND:
             if (_instances.TryGetValue(parameterPtr, out var commandInstance))
-              instance.OnEventCommandStarted?.Invoke(commandInstance);
+              instance.onEventCommandStarted?.Invoke(commandInstance);
             return FMOD.RESULT.OK;
 
           case FMOD.Studio.EVENT_CALLBACK_TYPE.NESTED_TIMELINE_BEAT:
-            instance.OnNestedTimelineBeat?.WithParameter(parameterPtr).Invoke();
+            instance.onNestedTimelineBeat?.WithParameter(parameterPtr).Invoke();
             return FMOD.RESULT.OK;
 
           default:
@@ -526,5 +511,26 @@ namespace Audune.Audio
         return ex.Result;
       }
     }
+    #endregion
+
+    #region Equatable implementation
+    // Return if the instance equals another object
+    public override bool Equals(object obj)
+    {
+      return Equals(obj as FMODEventInstance);
+    }
+
+    // Return if the instance equals another instance
+    public bool Equals(FMODEventInstance other)
+    {
+      return other is not null && _nativeEventInstance.handle.Equals(other._nativeEventInstance.handle);
+    }
+
+    // Return the hash code of the instance
+    public override int GetHashCode()
+    {
+      return HashCode.Combine(_nativeEventInstance.handle);
+    }
+    #endregion
   }
 }

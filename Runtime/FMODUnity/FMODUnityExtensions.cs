@@ -6,22 +6,7 @@ namespace Audune.Audio
   // Class that defines extension methods for FMOD managed by Unity
   public static class FMODUnityExtensions
   {
-    // Return an event description of the system from an event reference
-    public static FMODEventDescription GetEvent(this FMODStudioSystem system, EventReference reference)
-    {
-      return system.GetEvent(reference.Guid);
-    }
-
-    // Return an event reference from an event description
-    public static EventReference GetEventReference(this FMODEventDescription description)
-    {
-#if UNITY_EDITOR
-      return new EventReference { Guid = description.guid, Path = description.path };
-#else
-      return new EventReference { Guid = description.guid };
-#endif
-    }
-
+    #region Creating event instances
     // Create an event instance from the reference
     public static FMODEventInstance CreateInstance(this EventReference reference)
     {
@@ -76,8 +61,9 @@ namespace Audune.Audio
     {
       return FMODStudio.GetEvent(reference).CreateAudioTableInstance(key, transform);
     }
+    #endregion
 
-
+    #region Starting event instances
     // Create an event instance from the description and start it
     public static FMODEventInstance StartInstance(this FMODEventDescription description, Transform transform = null)
     {
@@ -105,7 +91,9 @@ namespace Audune.Audio
     {
       return FMODStudio.GetEvent(reference).StartAudioTableInstance(key, transform);
     }
+    #endregion
 
+    #region Starting one shot event instances
     // Create an event instance from the description, start it, and release it immediately
     public static void StartOneShotInstance(this FMODEventDescription description, Transform transform = null)
     {
@@ -133,9 +121,9 @@ namespace Audune.Audio
     {
       FMODStudio.GetEvent(reference).StartOneShotAudioTableInstance(key, transform);
     }
+    #endregion
 
-
-
+    #region Stopping all instances
     // Stop all instances of the description
     public static void StopAllInstances(this FMODEventDescription description)
     {
@@ -152,5 +140,6 @@ namespace Audune.Audio
     {
       FMODStudio.GetEvent(reference).StopAllInstances();
     }
+    #endregion
   }
 }

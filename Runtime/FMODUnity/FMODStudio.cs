@@ -22,11 +22,13 @@ namespace Audune.Audio
     }
 
 
+    #region Properties
     // Return the banks of the system
     public static IEnumerable<FMODBank> banks
       => studioSystem.banks;
+    #endregion
 
-
+    #region Methods
     // Return a bank of the system by its path
     public static FMODBank GetBank(string path)
      => studioSystem.GetBank(path);
@@ -45,7 +47,7 @@ namespace Audune.Audio
 
     // Return an event description of the system from an event reference
     public static FMODEventDescription GetEvent(FMODUnity.EventReference reference)
-      => studioSystem.GetEvent(reference);
+      => studioSystem.GetEvent(reference.Guid);
 
     // Return a bus of the system by its path
     public static FMODMixerBus GetMixerBus(string path)
@@ -106,5 +108,6 @@ namespace Audune.Audio
     // Return the path for a bank, event, snapshot, bus or VCA of the system
     public static string LookupPath(FMOD.GUID guid)
       => studioSystem.LookupPath(guid);
+    #endregion
   }
 }

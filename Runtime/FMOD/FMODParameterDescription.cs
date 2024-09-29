@@ -10,15 +10,17 @@ namespace Audune.Audio
     private readonly FMOD.Studio.PARAMETER_DESCRIPTION _nativeParameterDescription;
 
 
+    #region Constructors
     // Constructor from a native parameter description
     public FMODParameterDescription(FMODStudioSystem system, FMOD.Studio.PARAMETER_DESCRIPTION nativeParameterDescription) : base(system)
     {
       _nativeParameterDescription = nativeParameterDescription;
     }
+    #endregion
 
-
+    #region Properties
     // Return the native handle of the parameter description
-    internal FMOD.Studio.PARAMETER_DESCRIPTION Native => _nativeParameterDescription;
+    internal FMOD.Studio.PARAMETER_DESCRIPTION native => _nativeParameterDescription;
 
 
     // Return the unique identifier of the parameter description
@@ -44,8 +46,9 @@ namespace Audune.Audio
 
     // Return the flags of the parameter description
     public FMOD.Studio.PARAMETER_FLAGS flags => _nativeParameterDescription.flags;
+    #endregion
 
-
+    #region Methods
     // Return the global parameter value for the description
     public float GetGlobalParameter()
     {
@@ -85,5 +88,6 @@ namespace Audune.Audio
     {
       instance.SetParameter(id, label, ignoreSeekSpeed);
     }
+    #endregion
   }
 }
