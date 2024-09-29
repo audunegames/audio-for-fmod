@@ -5,6 +5,16 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.0.0+2.02.21] - 2024-09-29
+
+### Added
+
+- State vectors for playing audio events in 3D in multiple ways.
+
+### Changed
+
+- Added paths of FMOD studio components in the property drawers in the editor to search for them easier.
+
 ## [0.2.0+2.02.21] - 2024-06-16
 
 ### Changed
