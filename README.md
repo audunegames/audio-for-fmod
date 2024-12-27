@@ -49,4 +49,4 @@ https://github.com/audunegames/audio-for-fmod.git
 
 ## License
 
-This package is licensed under the GNU GPL 3.0 license. See `LICENSE.txt` for more information.
+This package is licensed under the GNU LGPL 3.0 license. See `LICENSE.txt` for more information.
