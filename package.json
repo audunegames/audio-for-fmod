@@ -1,7 +1,7 @@
 {
   "name": "com.audune.audio.fmod",
   "displayName": "Audio for FMOD",
-  "version": "1.0.1+2.02.21",
+  "version": "1.0.2+2.02.21",
   "unity": "2022.3",
   "description": "Audio system built on top of FMOD for Unity 2022 LTS or higher.",
   "documentationUrl": "https://github.com/audunegames/audio-for-fmod",
