@@ -40,8 +40,9 @@ namespace Audune.Audio
     public void Play(StateVector vector = null, params InstanceCreatedCallback[] callbacks)
     {
       // Create the instance for the audio event and start it
-      using var instance = CreateInstance(vector, callbacks);
-      instance.Start();
+      var instance = CreateInstance(vector, callbacks);
+      instance?.Start();
+      instance?.Dispose();
     }
 
     // Stop all instances of the audio event
