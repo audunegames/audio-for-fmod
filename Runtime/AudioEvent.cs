@@ -9,11 +9,15 @@ namespace Audune.Audio
   [Serializable]
   public sealed class AudioEvent : IEquatable<AudioEvent>
   {
+    // Delegate that defines a callback that is invoked when an audio event instance is created
+    public delegate void InstanceCreatedCallback(FMODEventInstance instance);
+
+
     // Dictionary of global audio event instances
     private readonly Dictionary<AudioEvent, FMODEventInstance> _globalInstances = new Dictionary<AudioEvent, FMODEventInstance>();
 
 
-    // Audio event emitter settings
+    // Audio event settings
     [SerializeField, Tooltip("The audio event to play")]
     private EventReference _event;
 
@@ -29,22 +33,15 @@ namespace Audune.Audio
 
     // Internal state of the audio event emitter
     private int _lastPickedIndex = -1;
+    
 
-
+    #region Playing and stopping instances
     // Play the audio event
-    public void Play(StateVector vector = null)
+    public void Play(StateVector vector = null, params InstanceCreatedCallback[] callbacks)
     {
-      // Start a one shot instance for the audio event
-      StartOneShotInstance(vector);
-    }
-
-    // Play the audio event and return the instance
-    public FMODEventInstance PlayInstance(StateVector vector = null)
-    {
-      // Start a instance for the audio event
-      var instance = CreateInstance(vector);
+      // Create the instance for the audio event and start it
+      using var instance = CreateInstance(vector, callbacks);
       instance.Start();
-      return instance;
     }
 
     // Stop all instances of the audio event
@@ -53,7 +50,9 @@ namespace Audune.Audio
       // Stop all instances of the audio event
       _event.StopAllInstances();
     }
+    #endregion
 
+    #region Playing and stopping global instances
     // Return if the audio event has a global instance
     public bool TryGetGlobalInstance(out FMODEventInstance globalInstance)
     {
@@ -62,13 +61,13 @@ namespace Audune.Audio
     }
 
     // Play the audio event on its global instance
-    public void PlayGlobalInstance()
+    public void PlayGlobalInstance(params InstanceCreatedCallback[] callbacks)
     {
       // Return the existing global instance if any
       if (!TryGetGlobalInstance(out var globalInstance))
       {
         // Create a new global instance and store it
-        globalInstance = CreateInstance();
+        globalInstance = CreateInstance(null, callbacks);
         if (globalInstance != null)
           _globalInstances.Add(this, globalInstance);
       }
@@ -95,39 +94,31 @@ namespace Audune.Audio
         globalInstance.Dispose();
       }
     }
+    #endregion
 
-
-    #region Creating and starting instances
+    #region Creating instances
     // Create an instance for the audio event
-    private FMODEventInstance CreateInstance(StateVector vector = null)
+    private FMODEventInstance CreateInstance(StateVector vector = null, params InstanceCreatedCallback[] callbacks)
     {
       // If the type is none or the event is null, then do nothing
       if (_event.IsNull)
         return null;
 
       // Check the type of the event and create an instance
+      FMODEventInstance instance;
       if (_type == AudioEventType.OneShot)
-        return _event.CreateInstance(vector);
+        instance = _event.CreateInstance(vector);
       else if (_type == AudioEventType.OneShotAudioTable && TryPickTableKey(out var key))
-        return _event.CreateAudioTableInstance(key, vector);
+        instance = _event.CreateAudioTableInstance(key, vector);
       else
         throw new InvalidOperationException($"{_type} is not a valid audio event type");
-    }
 
-    // Start a one shot instance for the audio event
-    private void StartOneShotInstance(StateVector vector = null)
-    {
-      // If the type is none or the event is null, then do nothing
-      if (_event.IsNull)
-        return;
+      // Invoke the callbacks on the instance
+      foreach (var callback in callbacks)
+        callback(instance);
 
-      // Check the type of the event and start a one shot instance
-      if (_type == AudioEventType.OneShot)
-        _event.StartOneShotInstance(vector);
-      else if (_type == AudioEventType.OneShotAudioTable && TryPickTableKey(out var key))
-        _event.StartOneShotAudioTableInstance(key, vector);
-      else
-        throw new InvalidOperationException($"{_type} is not a valid audio event type");
+      // Return the instance
+      return instance;
     }
     #endregion
 
@@ -180,6 +171,24 @@ namespace Audune.Audio
     {
       return HashCode.Combine(_event.Guid);
     }
+    #endregion
+
+    #region Returning callbacks
+    // Set the pitch to the specified value
+    public static InstanceCreatedCallback Pitch(float value)
+      => instance => instance.pitch = value;
+
+    // Set the volume to the specified value
+    public static InstanceCreatedCallback Volume(float value)
+      => instance => instance.volume = value;
+
+    // Set the parameter with the specified name to the specified value
+    public static InstanceCreatedCallback Parameter(string name, float value, bool ignoreSeekSpeed = false)
+      => instance => instance.SetParameter(name, value, ignoreSeekSpeed);
+
+    // Set the parameter with the specified name to the specified value
+    public static InstanceCreatedCallback Parameter(string name, string label, bool ignoreSeekSpeed = false)
+      => instance => instance.SetParameter(name, label, ignoreSeekSpeed);
     #endregion
   }
 }
