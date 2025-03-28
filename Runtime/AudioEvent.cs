@@ -33,6 +33,10 @@ namespace Audune.Audio
 
     // Internal state of the audio event emitter
     private int _lastPickedIndex = -1;
+
+
+    // Return the event description of the audio event
+    public FMODEventDescription description => FMODStudio.GetEvent(_event);
     
 
     #region Playing and stopping instances
