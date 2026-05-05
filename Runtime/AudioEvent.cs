@@ -38,6 +38,32 @@ namespace Audune.Audio
     // Return the event description of the audio event
     public FMODEventDescription description => FMODStudio.GetEvent(_event);
     
+    
+    #region Creating instances
+    // Create an instance for the audio event
+    public FMODEventInstance CreateInstance(StateVector vector = null, params InstanceCreatedCallback[] callbacks)
+    {
+      // If the type is none or the event is null, then do nothing
+      if (_event.IsNull)
+        return null;
+
+      // Check the type of the event and create an instance
+      FMODEventInstance instance;
+      if (_type == AudioEventType.OneShot)
+        instance = _event.CreateInstance(vector);
+      else if (_type == AudioEventType.OneShotAudioTable && TryPickTableKey(out var key))
+        instance = _event.CreateAudioTableInstance(key, vector);
+      else
+        throw new InvalidOperationException($"{_type} is not a valid audio event type");
+
+      // Invoke the callbacks on the instance
+      foreach (var callback in callbacks)
+        callback(instance);
+
+      // Return the instance
+      return instance;
+    }
+    #endregion
 
     #region Playing and stopping instances
     // Play the audio event
@@ -47,6 +73,15 @@ namespace Audune.Audio
       var instance = CreateInstance(vector, callbacks);
       instance?.Start();
       instance?.Dispose();
+    }
+    
+    // Play the audio event and return the instance
+    public FMODEventInstance PlayAndReturnInstance(StateVector vector = null, params InstanceCreatedCallback[] callbacks)
+    {
+      // Create the instance for the audio event and start it
+      var instance = CreateInstance(vector, callbacks);
+      instance?.Start();
+      return instance;
     }
 
     // Stop all instances of the audio event
@@ -101,32 +136,6 @@ namespace Audune.Audio
     }
     #endregion
 
-    #region Creating instances
-    // Create an instance for the audio event
-    private FMODEventInstance CreateInstance(StateVector vector = null, params InstanceCreatedCallback[] callbacks)
-    {
-      // If the type is none or the event is null, then do nothing
-      if (_event.IsNull)
-        return null;
-
-      // Check the type of the event and create an instance
-      FMODEventInstance instance;
-      if (_type == AudioEventType.OneShot)
-        instance = _event.CreateInstance(vector);
-      else if (_type == AudioEventType.OneShotAudioTable && TryPickTableKey(out var key))
-        instance = _event.CreateAudioTableInstance(key, vector);
-      else
-        throw new InvalidOperationException($"{_type} is not a valid audio event type");
-
-      // Invoke the callbacks on the instance
-      foreach (var callback in callbacks)
-        callback(instance);
-
-      // Return the instance
-      return instance;
-    }
-    #endregion
-
     #region Picking audio table keys
     // Pick a key from the audio table
     private bool TryPickTableKey(out string key)
@@ -168,7 +177,7 @@ namespace Audune.Audio
     // Return if the audio event equals another event
     public bool Equals(AudioEvent other)
     {
-      return _event.Guid == other._event.Guid;
+      return other is not null && _event.Guid == other._event.Guid;
     }
 
     // Return the hash code of the audio event
