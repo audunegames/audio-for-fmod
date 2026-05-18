@@ -9,7 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Security
 
-- Added sign and release workflow to sign and release an UPM package when a Git tag is pushed.
+- Added sign and release workflow to sign and release a UPM package when a Git tag is pushed.
 
 ## [1.1.3+2.02.21] - 2026-05-05
 
