@@ -516,16 +516,28 @@ namespace Audune.Audio
       return Equals(obj as FMODEventInstance);
     }
 
-    // Return if the instance equals another instance
+    // Return if the instance equals another event instance
     public bool Equals(FMODEventInstance other)
     {
       return other is not null && _nativeEventInstance.handle.Equals(other._nativeEventInstance.handle);
     }
 
-    // Return the hash code of the instance
+    // Return the hash code of the event instance
     public override int GetHashCode()
     {
       return HashCode.Combine(_nativeEventInstance.handle);
+    }
+
+    // Return if the specified event instances are equal
+    public static bool operator ==(FMODEventInstance left, FMODEventInstance right)
+    {
+      return Equals(left, right);
+    }
+    
+    // Return if the specified event instances are not equal
+    public static bool operator !=(FMODEventInstance left, FMODEventInstance right)
+    {
+      return !(left == right);
     }
     #endregion
   }

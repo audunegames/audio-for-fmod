@@ -87,16 +87,28 @@ namespace Audune.Audio
       return Equals(obj as FMODMixerVCA);
     }
 
-    // Return if the VCA equals another VCA
+    // Return if the VCA equals another mixer VCA
     public bool Equals(FMODMixerVCA other)
     {
       return other is not null && _nativeVCA.handle.Equals(other._nativeVCA.handle);
     }
 
-    // Return the hash code of the VCA
+    // Return the hash code of the mixer VCA
     public override int GetHashCode()
     {
       return HashCode.Combine(_nativeVCA.handle);
+    }
+
+    // Return if the specified mixer VCAs are equal
+    public static bool operator ==(FMODMixerVCA left, FMODMixerVCA right)
+    {
+      return Equals(left, right);
+    }
+    
+    // Return if the specified mixer VCAs are not equal
+    public static bool operator !=(FMODMixerVCA left, FMODMixerVCA right)
+    {
+      return !(left == right);
     }
     #endregion
   }

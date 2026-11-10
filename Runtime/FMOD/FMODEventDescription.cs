@@ -257,6 +257,18 @@ namespace Audune.Audio
     {
       return HashCode.Combine(_nativeEventDescription.handle);
     }
+
+    // Return if the specified descriptions are equal
+    public static bool operator ==(FMODEventDescription left, FMODEventDescription right)
+    {
+      return Equals(left, right);
+    }
+    
+    // Return if the specified descriptions are not equal
+    public static bool operator !=(FMODEventDescription left, FMODEventDescription right)
+    {
+      return !(left == right);
+    }
     #endregion
 
     #region Implicit operators

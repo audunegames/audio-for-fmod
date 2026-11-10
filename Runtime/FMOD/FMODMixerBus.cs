@@ -149,16 +149,28 @@ namespace Audune.Audio
       return Equals(obj as FMODMixerBus);
     }
 
-    // Return if the bus equals another event instance
+    // Return if the bus equals another mixer bus
     public bool Equals(FMODMixerBus other)
     {
       return other is not null && _nativeBus.handle.Equals(other._nativeBus.handle);
     }
 
-    // Return the hash code of the event instance
+    // Return the hash code of the mixer bus
     public override int GetHashCode()
     {
       return HashCode.Combine(_nativeBus.handle);
+    }
+
+    // Return if the specified mixer buses are equal
+    public static bool operator ==(FMODMixerBus left, FMODMixerBus right)
+    {
+      return Equals(left, right);
+    }
+    
+    // Return if the specified mixer buses are not equal
+    public static bool operator !=(FMODMixerBus left, FMODMixerBus right)
+    {
+      return !(left == right);
     }
     #endregion
   }

@@ -157,6 +157,18 @@ namespace Audune.Audio
     {
       return HashCode.Combine(_nativeBank.handle);
     }
+
+    // Return if the specified banks are equal
+    public static bool operator ==(FMODBank left, FMODBank right)
+    {
+      return Equals(left, right);
+    }
+    
+    // Return if the specified banks are not equal
+    public static bool operator !=(FMODBank left, FMODBank right)
+    {
+      return !(left == right);
+    }
     #endregion
   }
 }
