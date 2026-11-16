@@ -5,6 +5,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.1.7+2.02.21] - 2026-11-16
+
+### Fixed
+
+- Resolved obsolete `Rigidbody.velocity` properties in Unity 6000.0 or newer.
+
 ## [1.1.6+2.02.21] - 2026-11-10
 
 ### Added
