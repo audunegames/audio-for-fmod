@@ -24,9 +24,21 @@ namespace Audune.Audio
     public static Vector3 GetVelocity(Transform transform)
     {
       if (transform.TryGetComponent<Rigidbody>(out var rigidbody))
+      {
+        #if UNITY_6000_0_OR_NEWER
+        return rigidbody.linearVelocity;
+        #else
         return rigidbody.velocity;
+        #endif
+      }
       else if (transform.TryGetComponent<Rigidbody2D>(out var rigidbody2D))
+      {
+        #if UNITY_6000_0_OR_NEWER
+        return rigidbody2D.linearVelocity;
+        #else
         return rigidbody2D.velocity;
+        #endif
+      }
       else
         return UnityEngine.Vector3.zero;
     }
