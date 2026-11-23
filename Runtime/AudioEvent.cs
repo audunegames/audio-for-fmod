@@ -1,6 +1,7 @@
 ﻿using FMODUnity;
 using System;
 using System.Collections.Generic;
+using FMOD;
 using UnityEngine;
 
 namespace Audune.Audio
@@ -190,19 +191,49 @@ namespace Audune.Audio
     #region Returning callbacks
     // Set the pitch to the specified value
     public static InstanceCreatedCallback Pitch(float value)
-      => instance => instance.pitch = value;
+    {
+      return instance => instance.pitch = value;
+    }
 
     // Set the volume to the specified value
     public static InstanceCreatedCallback Volume(float value)
-      => instance => instance.volume = value;
+    {
+      return instance => instance.volume = value;
+    }
 
     // Set the parameter with the specified name to the specified value
     public static InstanceCreatedCallback Parameter(string name, float value, bool ignoreSeekSpeed = false)
-      => instance => instance.SetParameter(name, value, ignoreSeekSpeed);
+    {
+      return instance => {
+        try
+        {
+          instance.SetParameter(name, value, ignoreSeekSpeed);
+        }
+        catch (FMODException ex)
+        {
+          if (ex.Result == RESULT.ERR_EVENT_NOTFOUND || ex.Result == RESULT.ERR_INVALID_PARAM)
+            return;
+          throw;
+        }
+      };
+    }
 
     // Set the parameter with the specified name to the specified value
     public static InstanceCreatedCallback Parameter(string name, string label, bool ignoreSeekSpeed = false)
-      => instance => instance.SetParameter(name, label, ignoreSeekSpeed);
+    {
+      return instance => {
+        try
+        {
+          instance.SetParameter(name, label, ignoreSeekSpeed);
+        }
+        catch (FMODException ex)
+        {
+          if (ex.Result == RESULT.ERR_EVENT_NOTFOUND || ex.Result == RESULT.ERR_INVALID_PARAM)
+            return;
+          throw;
+        }
+      };
+    }
     #endregion
   }
 }
